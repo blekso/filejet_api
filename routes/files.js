@@ -1,4 +1,4 @@
-const { File, validateFile } = require("../models/file");
+const { File, validate } = require("../models/file");
 const express = require("express");
 const router = express.Router();
 
@@ -48,7 +48,7 @@ router.get("/:id", (req, res) => {
 });
 
 router.post("/", (req, res) => {
-  const { error } = validateFile(req.body);
+  const { error } = validate(req.body);
 
   if (error) {
     return res.status(400).send(error.details[0].message);
@@ -63,7 +63,7 @@ router.post("/", (req, res) => {
     return res.status(404).send("The couse with the given ID was not found.");
   }
 
-  const { error } = validateFile(req.body);
+  const { error } = validate(req.body);
 
   if (error) {
     return res.status(400).send(error.details[0].message);
