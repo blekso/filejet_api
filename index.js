@@ -2,6 +2,7 @@ const config = require("config");
 const mongoose = require("mongoose");
 const morgan = require("morgan");
 const helmet = require("helmet");
+var cors = require("cors");
 const logger = require("./middleware/logger");
 const express = require("express");
 const auth = require("./routes/auth");
@@ -22,6 +23,7 @@ mongoose
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(helmet());
+app.use(cors());
 app.use("/api/files", files);
 app.use("/api/users", users);
 app.use("/api/auth", auth);
