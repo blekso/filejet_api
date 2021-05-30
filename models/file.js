@@ -5,7 +5,7 @@ const File = mongoose.model(
   "file",
   new mongoose.Schema({
     name: { type: String, required: true },
-    owner: String,
+    ownerId: { type: String, ref: "user" },
     tags: [String],
     date: { type: Date, default: Date.now },
     isPublished: Boolean,

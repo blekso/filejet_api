@@ -1,3 +1,4 @@
+const Joi = require("joi");
 const { File, validate } = require("../models/file");
 const express = require("express");
 const router = express.Router();
@@ -11,9 +12,9 @@ async function getFileById(id) {
   }
 }
 
-async function getFiles() {
+async function getFiles(ownerId) {
   try {
-    const files = await File.find();
+    const files = await File.find({ ownerId });
     return files;
   } catch (err) {
     console.error(err);
@@ -22,10 +23,8 @@ async function getFiles() {
 
 async function addFile() {
   const file = new File({
-    name: "Angular file",
-    author: "Mosh",
-    tags: ["Angular", "frontend"],
-    isPusblished: true,
+    name: "mihael1 file 2",
+    ownerId: "60a903e214935739c8dd1740",
   });
   try {
     const result = await file.save();
@@ -36,16 +35,27 @@ async function addFile() {
 }
 
 router.get("/", (req, res) => {
-  getFiles()
+  /*const schama = Joi.object({
+    ownerId: Joi.string().required(),
+  });
+  const { error } = schama.validate(req.body);
+  if (error) return res.status(400).send(error.details[0].message);*/
+
+  /*getFiles(req.body.ownerId)
+    .then((files) => res.send(files))
+    .catch((err) => res.send(err));*/
+
+  const ownerId = "60a903e214935739c8dd1740";
+  getFiles(ownerId)
     .then((files) => res.send(files))
     .catch((err) => res.send(err));
 });
 
-router.get("/:id", (req, res) => {
+/*router.get("/:id", (req, res) => {
   getFileById(req.body.id)
     .then((file) => res.send(file))
     .catch((err) => res.send(err));
-});
+});*/
 
 router.post("/", (req, res) => {
   const { error } = validate(req.body);
@@ -56,30 +66,5 @@ router.post("/", (req, res) => {
 
   console.log(req.body);
 });
-
-/*router.put("/:id", (req, res) => {
-  const file = files.find((el) => el.id === parseInt(req.params.id));
-  if (!file) {
-    return res.status(404).send("The couse with the given ID was not found.");
-  }
-
-  const { error } = validate(req.body);
-
-  if (error) {
-    return res.status(400).send(error.details[0].message);
-  }
-
-  file.name = req.body.name;
-  res.send(file);
-});
-
-router.delete("/:id", (req, res) => {
-  const file = await file.deleteOne({ _id: req.params.id });
-  if (!file) {
-    return res.status(404).send("The couse with the given ID was not found.");
-  }
-
-  res.send(file);
-});*/
 
 module.exports = router;
