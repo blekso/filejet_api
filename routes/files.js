@@ -12,6 +12,15 @@ async function getFileById(id) {
   }
 }
 
+async function deleteFileById(id) {
+  try {
+    const result = await File.deleteOne({ _id: id });
+    return result;
+  } catch (err) {
+    console.error(err);
+  }
+}
+
 async function getFiles(ownerId) {
   try {
     const files = await File.find({ ownerId });
@@ -23,8 +32,8 @@ async function getFiles(ownerId) {
 
 async function addFile() {
   const file = new File({
-    name: "mihael1 file 2",
-    ownerId: "60a903e214935739c8dd1740",
+    name: "mihael1 file 6",
+    ownerId: "609eb51d2c72ab2a74c699df",
   });
   try {
     const result = await file.save();
@@ -35,27 +44,16 @@ async function addFile() {
 }
 
 router.get("/", (req, res) => {
-  /*const schama = Joi.object({
+  const schama = Joi.object({
     ownerId: Joi.string().required(),
   });
-  const { error } = schama.validate(req.body);
-  if (error) return res.status(400).send(error.details[0].message);*/
+  const { error } = schama.validate(req.query);
+  if (error) return res.status(400).send(error.details[0].message);
 
-  /*getFiles(req.body.ownerId)
-    .then((files) => res.send(files))
-    .catch((err) => res.send(err));*/
-
-  const ownerId = "60a903e214935739c8dd1740";
-  getFiles(ownerId)
+  getFiles(req.query.ownerId)
     .then((files) => res.send(files))
     .catch((err) => res.send(err));
 });
-
-/*router.get("/:id", (req, res) => {
-  getFileById(req.body.id)
-    .then((file) => res.send(file))
-    .catch((err) => res.send(err));
-});*/
 
 router.post("/", (req, res) => {
   const { error } = validate(req.body);
@@ -65,6 +63,18 @@ router.post("/", (req, res) => {
   }
 
   console.log(req.body);
+});
+
+router.delete("/", (req, res) => {
+  const schama = Joi.object({
+    _id: Joi.string().required(),
+  });
+  const { error } = schama.validate(req.body);
+  if (error) return res.status(400).send(error.details[0].message);
+  console.log(req.body);
+  deleteFileById(req.body._id)
+    .then((res) => res.send(res))
+    .catch((err) => res.send(err));
 });
 
 module.exports = router;
