@@ -1,6 +1,9 @@
 const Joi = require("joi");
 const { File, validate } = require("../models/file");
 const express = require("express");
+const formidable = require("formidable");
+var Binary = require("mongodb").Binary;
+const fs = require("fs");
 const router = express.Router();
 
 async function getFileById(id) {
@@ -30,16 +33,13 @@ async function getFiles(ownerId) {
   }
 }
 
-async function addFile() {
-  const file = new File({
-    name: "mihael1 file 6",
-    ownerId: "609eb51d2c72ab2a74c699df",
-  });
+async function addFile(newFile) {
+  const file = new File(newFile);
   try {
     const result = await file.save();
-    console.log(result);
+    return result;
   } catch (err) {
-    console.error(err);
+    return err;
   }
 }
 
@@ -56,13 +56,32 @@ router.get("/", (req, res) => {
 });
 
 router.post("/", (req, res) => {
-  const { error } = validate(req.body);
+  const form = formidable({ multiples: true });
 
-  if (error) {
-    return res.status(400).send(error.details[0].message);
-  }
+  form.parse(req, (err, fields, files) => {
+    if (err) {
+      next(err);
+      return;
+    }
+    const verifyFile = {
+      name: files.File.name,
+      type: files.File.type,
+      path: files.File.path,
+      size: files.File.size,
+      lastModifiedDate: files.File.lastModifiedDate,
+    };
+    const { error } = validate(verifyFile);
+    if (error) {
+      return res.status(400).send(error.details[0].message);
+    }
 
-  console.log(req.body);
+    var data = fs.readFileSync(files.File.path);
+    var insert_data = { ...files.File };
+    insert_data.ownerId = fields.ownerId;
+    insert_data.file_data = Binary(data);
+    const result = addFile(insert_data);
+    res.send(result);
+  });
 });
 
 router.delete("/", (req, res) => {
