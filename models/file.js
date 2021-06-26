@@ -7,6 +7,7 @@ const File = mongoose.model(
     file_data: { type: Buffer, required: true },
     name: { type: String, required: true },
     ownerId: { type: String, ref: "user" },
+    path: { type: String, required: true },
     size: { type: Number, required: true },
     type: { type: String, required: true },
     lastModifiedDate: { type: Date, required: true },
