@@ -55,6 +55,25 @@ router.get("/", (req, res) => {
     .catch((err) => res.send(err));
 });
 
+router.get("/download", (req, res) => {
+  console.log(req.body);
+
+  /*const schama = Joi.object({
+    _id: Joi.string().required(),
+    ownerId: Joi.string().required(),
+  });
+
+  const { error } = schama.validate(req.body);
+  if (error) return res.status(400).send(error.details[0].message);
+
+  const file = {}
+  getFileById(req.body._id)
+    .then((res) => file.res)
+    .catch((err) => res.send(err));
+
+  res.send(new Buffer(file.file_data, 'binary'))*/
+});
+
 router.post("/", (req, res) => {
   const form = formidable({ multiples: true });
 
