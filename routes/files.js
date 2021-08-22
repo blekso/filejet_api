@@ -55,23 +55,41 @@ router.get("/", (req, res) => {
     .catch((err) => res.send(err));
 });
 
-router.get("/download", (req, res) => {
-  console.log(req.body);
-
-  /*const schama = Joi.object({
+router.get("/download", async function (req, res) {
+  const schama = Joi.object({
     _id: Joi.string().required(),
     ownerId: Joi.string().required(),
   });
 
-  const { error } = schama.validate(req.body);
+  const { error } = schama.validate(req.query);
   if (error) return res.status(400).send(error.details[0].message);
 
-  const file = {}
-  getFileById(req.body._id)
-    .then((res) => file.res)
-    .catch((err) => res.send(err));
+  const file = await getFileById(req.query._id);
 
-  res.send(new Buffer(file.file_data, 'binary'))*/
+  console.log(file);
+
+  res.writeHead(200, {
+    "Content-Type": file.type,
+    "Content-disposition": "attachment;filename=" + file.name,
+    "Content-Length": file.size,
+  });
+
+  res.end(Buffer.from(file.file_data, "binary"));
+
+  /* const fileData = file.file_data;
+  const fileName = file.name;
+  const fileType = file.type;
+
+  res.download(fileName, fileData);*/
+  /*res.writeHead(200, {
+    "Content-Disposition": `attachment; filename="${fileName}"`,
+    "Content-Type": fileType,
+  });*/
+
+  /*res.end(Buffer.from(fileData, "binary"));*/
+
+  /*const download = Buffer.from(fileData, "binary");
+  res.end(download);*/
 });
 
 router.post("/", (req, res) => {
