@@ -16,7 +16,7 @@ if (!config.get("jwtPrivateKey")) {
 }
 
 mongoose
-  .connect("mongodb://localhost/playground")
+  .connect("mongodb://localhost/filejet")
   .then(() => console.log("Connected to MongoDB.."))
   .catch((err) => console.error("Cound not connect to MongoDB..", err));
 
