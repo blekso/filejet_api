@@ -51,7 +51,10 @@ router.get("/", (req, res) => {
   if (error) return res.status(400).send(error.details[0].message);
 
   getFiles(req.query.ownerId)
-    .then((files) => res.send(files))
+    .then((files) => {
+      console.log(files);
+      //res.send(files);
+    })
     .catch((err) => res.send(err));
 });
 
@@ -75,21 +78,6 @@ router.get("/download", async function (req, res) {
   });
 
   res.end(Buffer.from(file.file_data, "binary"));
-
-  /* const fileData = file.file_data;
-  const fileName = file.name;
-  const fileType = file.type;
-
-  res.download(fileName, fileData);*/
-  /*res.writeHead(200, {
-    "Content-Disposition": `attachment; filename="${fileName}"`,
-    "Content-Type": fileType,
-  });*/
-
-  /*res.end(Buffer.from(fileData, "binary"));*/
-
-  /*const download = Buffer.from(fileData, "binary");
-  res.end(download);*/
 });
 
 router.post("/", (req, res) => {
