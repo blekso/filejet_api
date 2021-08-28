@@ -52,8 +52,7 @@ router.get("/", (req, res) => {
 
   getFiles(req.query.ownerId)
     .then((files) => {
-      const filteredFiles = files.map((file) => delete file.file_data);
-      console.log(filteredFiles);
+      files.forEach((file) => delete file.file_data);
       //res.send(files);
     })
     .catch((err) => res.send(err));
