@@ -52,7 +52,11 @@ router.get("/", (req, res) => {
 
   getFiles(req.query.ownerId)
     .then((files) => {
-      console.log(files);
+      const filteredFiles = files.map((file) => {
+        delete file.file_data;
+        return file;
+      });
+      console.log(filteredFiles);
       //res.send(files);
     })
     .catch((err) => res.send(err));
