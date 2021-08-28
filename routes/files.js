@@ -70,8 +70,6 @@ router.get("/download", async function (req, res) {
 
   const file = await getFileById(req.query._id);
 
-  console.log(file);
-
   res.writeHead(200, {
     "Content-Type": file.type,
     "Content-disposition": "attachment;filename=" + file.name,
@@ -114,9 +112,11 @@ router.delete("/", (req, res) => {
   const schama = Joi.object({
     _id: Joi.string().required(),
   });
+
   const { error } = schama.validate(req.body);
+
   if (error) return res.status(400).send(error.details[0].message);
-  console.log(req.body);
+
   deleteFileById(req.body._id)
     .then((res) => res.send(res))
     .catch((err) => res.send(err));
