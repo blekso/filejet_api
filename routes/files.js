@@ -54,8 +54,7 @@ router.get("/", (req, res) => {
     .then((files) => {
       const filteredFiles = files;
       filteredFiles.forEach((f) => (f.file_data = "..."));
-      console.log(filteredFiles);
-      //res.send(files);
+      res.send(filteredFiles);
     })
     .catch((err) => res.send(err));
 });
